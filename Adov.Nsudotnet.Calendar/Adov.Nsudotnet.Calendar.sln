@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2027
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adov.Nsudotnet.Calendar", "Adov.Nsudotnet.Calendar\Adov.Nsudotnet.Calendar.csproj", "{563AA93E-4EC4-4206-8EE5-4472E4525036}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Adov.Nsudotnet.Calendar", "Adov.Nsudotnet.Calendar.csproj", "{563AA93E-4EC4-4206-8EE5-4472E4525036}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
