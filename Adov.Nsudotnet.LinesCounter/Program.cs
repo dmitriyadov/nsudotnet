@@ -83,6 +83,10 @@ namespace Adov.Nsudotnet.LinesCounter
                         newString = true;
                     }
                     i++;
+                    if (i == length)
+                    {
+                        count++;
+                    }
                 }
             }
             return count;
