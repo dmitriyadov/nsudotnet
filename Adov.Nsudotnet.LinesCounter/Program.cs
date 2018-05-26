@@ -1,9 +1,8 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 
 namespace Adov.Nsudotnet.LinesCounter
-{
+{   
     class Program
     {
         static void Main(string[] args)
@@ -15,47 +14,78 @@ namespace Adov.Nsudotnet.LinesCounter
                 return;
             }
             int count = 0;
+            char[] buffer = new char[1024];
             foreach (var file in Directory.GetFiles(Directory.GetCurrentDirectory(), args[0], SearchOption.AllDirectories))
             {
-                int line = File.ReadLines(file).Count(Netod);
-                count += line;
-
-                Console.WriteLine(line + " - " + file);
+                using (StreamReader sr = File.OpenText(file))
+                {
+                    while (!sr.EndOfStream)
+                    {
+                        int read = sr.Read(buffer, 0, buffer.Length);
+                        count += Netod(buffer, read);
+                    }
+                }
+                Console.WriteLine(count + " - " + file);
             }
             Console.WriteLine("Количество осмысленных строк равно: " + count);
             Console.ReadLine();
         }
-
-        private static bool nowWeInCom = false;
-
-        static bool Netod(string line)
-        {
-            if (((line.Trim().StartsWith("//")) && (nowWeInCom == false)) || (string.IsNullOrWhiteSpace(line)))
-            {
-                return false;
-            }  
-
+        static bool newString = true;
+        static int Netod(char[] arr, int length)
+        {     
+            int count = 0;
             int i = 0;
-            while(i < line.Length-1)
+            while (i < length)
             {
-                if ((line[i] == '*') && (line[i + 1] == '/'))
+                if (newString == true)
                 {
-                    nowWeInCom = false;
-                    if (line.EndsWith("*/")) return false;
-                }
-                if ((line[i] == '/') && (line[i + 1] == '*'))
-                {
-                    nowWeInCom = true;
-                    i++;
-                }     
-                i++;
-            }
+                    if (char.IsWhiteSpace(arr[i]))
+                    {
+                        i++;
+                        continue;
+                    }
 
-            if (nowWeInCom == false)
-            {
-                return true;
+                    if ((arr[i] == '/') && (arr[i+1] == '/'))
+                    {
+                        i+=2;
+                        while (i < length)
+                        {
+                            if (arr[i] == '\n')
+                            {
+                                i++;
+                                break;
+                            }
+                            i++;
+                        }
+                    }
+                    if ((arr[i] == '/') && (arr[i + 1] == '*'))
+                    {
+                        i += 3;
+                        while (i < length)
+                        {
+                            if (arr[i - 1] == '*' && arr[i] == '/')
+                            {
+                                i++;
+                                break;
+                            }
+                            i++;
+                        }
+                        continue;
+                    }
+                    newString = false;
+                    continue;
+                }
+                if (newString == false)
+                {
+                    if (arr[i] == '\n')
+                    {
+                        count++;
+                        newString = true;
+                    }
+                    i++;
+                }
             }
-            return false;
+            return count;
         }
     }
 }
